@@ -1,0 +1,21 @@
+#!/bin/bash
+
+mkdir backup
+mkdir completed
+TEMP=$(randomstring | head -n1)
+i="$1"
+mkdir $TEMP
+mv "$i" $TEMP/
+cd $TEMP
+unzip -j "$i"
+mv "$i" ../backup/
+mkdir small
+for j in $(ls -1 | grep -v ^small$) ; do 
+	convert -verbose "$j" -resize x2160\> "small/$j"
+done
+# wait $(jobs -rp)
+cd small
+zip ../../completed/$i *
+cd ../..
+rm -rf $TEMP
+
