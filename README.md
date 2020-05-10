@@ -1,16 +1,20 @@
 # shrinkcbz
 quick and dirty tool to shrink cbz files which have oversize images.
-I built this because some humblebundles come with 8k cbz/cbr files that break many android viewers.  It converts to 4k (2160 pix high)
+I built this because some humblebundles come with 8-12k cbz/cbr files that break many android viewers.  It converts to 4k (2160 pix high)
+It also converts them to webp now.
 Please use with caution. It does not deal with edge cases well.  It may vomit, and depending on the source images, may take a long time to run.
 
 # Requirements
 * bash
 * Imagemagick (convert) installed.
+* rar
+* unrar
+* zip
+* unzip
 
 # Drawbacks
 * Does not deal with cb7 files
 * Does not deal with cba files
-* Does not deal with cbr files
 * Does not deal with cbt files
 * Full of edge cases.
 

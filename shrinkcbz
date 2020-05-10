@@ -1,21 +1,58 @@
 #!/bin/bash
 
-mkdir backup
-mkdir completed
-TEMP=$(randomstring | head -n1)
+# Grab some information about the file you've been handed and reject anything that isn't a zip or rar.
 i="$1"
-mkdir $TEMP
+FILETYPE=$(file "$i")
+TEMP=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
+echo $FILETYPE
+
+case $FILETYPE in
+	*"Zip archive data"*)
+		EXTRACTCMD="unzip -j "
+		ARCHIVECMD="zip -0 "
+		;;
+	*"RAR archive data"*)
+		EXTRACTCMD="unrar e "
+		ARCHIVECMD="rar a -m0 "
+		;;
+	*)
+		echo "$i is an unsupported file - exiting"
+		exit 0
+		;;
+esac
+
+# Create some directories and put your input archive in the right place.
+mkdir -p backup
+mkdir -p completed
+mkdir -p $TEMP
 mv "$i" $TEMP/
 cd $TEMP
-unzip -j "$i"
+mkdir -p small
+
+# Extract your input archive and back it up
+$EXTRACTCMD "$i"
 mv "$i" ../backup/
-mkdir small
+
+# Convert all images to webp at 4k or lower resolution
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
 for j in $(ls -1 | grep -v ^small$) ; do 
-	convert -verbose "$j" -resize x2160\> "small/$j"
+	IFS=$SAVEIFS
+	FILETYPE=$(file "$j")
+	case $FILETYPE in
+		*"image data"*)
+			convert -quiet -verbose "$j" -resize x2160\> "small/$j.webp"
+			;;
+		*)
+			mv "$j" small/
+			;;
+	esac
 done
-# wait $(jobs -rp)
+
+# Recreate your archive and clean up.
 cd small
-zip ../../completed/$i *
+$ARCHIVECMD "../../completed/$i" *
 cd ../..
 rm -rf $TEMP
 
