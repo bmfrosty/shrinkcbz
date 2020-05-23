@@ -38,12 +38,17 @@ for i in *.cbz ; do shrinkcbz $i ; done
 
 ## Notes for extremely large image files
 I discovered this with the 2gb CBZ files that came in recent Manga HumbleBundle.
+
 Specifically Parasyte Vol 1 & 2
+
 You may need to update /etc/ImageMagick-6/policy.xml
+
 Just comment out all the resource limits.  Example:
+
 Change
 ` <policy domain="resource" name="memory" value="2048MiB"/>`
 To
 `  <!-- <policy domain="resource" name="memory" value="2048MiB"/>  -->`
 Do this with all resource policies, and it should run again.
+
 Beware that this will allow an extrememly large image to OOM your system.
