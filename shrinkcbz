@@ -14,7 +14,7 @@ case $FILETYPE in
 		;;
 	*"RAR archive data"*)
 		EXTRACTCMD="unrar e "
-		ARCHIVECMD="rar a -m0 "
+		ARCHIVECMD="rar a -m0 -ma4 "
 		;;
 	*)
 		echo "$i is an unsupported file - exiting"
