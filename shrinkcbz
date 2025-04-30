@@ -42,7 +42,7 @@ for j in $(ls -1 | grep -v ^small$) ; do
 	FILETYPE=$(file "$j")
 	case $FILETYPE in
 		*"image data"*)
-			convert -quiet -verbose "$j" -resize x2160\> "small/$j.webp"
+			convert -quiet -verbose "$j" -resize x2160\> "small/${j%.*}.webp"
 			;;
 		*)
 			mv "$j" small/
